@@ -2,10 +2,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class block_feedbackmanager extends block_base {
+class block_feedbackmgr extends block_base {
 
 	function init() {
-		$this->title = get_string('title', 'block_feedbackmanager');
+		$this->title = get_string('title', 'block_feedbackmgr');
 	}
 	
 	function applicable_formats() {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/feedbackmanager/db" VERSION="20110921" COMMENT="XMLDB file for Moodle blocks/feedbackmgr"
+<XMLDB PATH="blocks/feedbackmgr/db" VERSION="20110921" COMMENT="XMLDB file for Moodle blocks/feedbackmgr"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -24,7 +24,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="block_feedbackmgr_orgunit_code_ix" UNIQUE="true" FIELDS="code"/>
+        <INDEX NAME="block_feedbackmgr_orgunit_code_ix" UNIQUE="true" FIELDS="code(20)"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="block_feedbackmgr_orgtime" COMMENT="A definition of a time period in which teaching (or QA) may occur, e.g. a session, or a particular semester of a certain year/session" PREVIOUS="block_feedbackmgr_orgsite" NEXT="block_feedbackmgr_orgcourse">
@@ -62,8 +62,8 @@
         <INDEX NAME="orgunitid_ix" UNIQUE="false" FIELDS="orgunitid" NEXT="orgsiteid_ix"/>
         <INDEX NAME="orgsiteid_ix" UNIQUE="false" FIELDS="orgsiteid" PREVIOUS="orgunitid_ix" NEXT="courseid_ix"/>
         <INDEX NAME="courseid_ix" UNIQUE="false" FIELDS="courseid" PREVIOUS="orgsiteid_ix" NEXT="year_ix"/>
-        <INDEX NAME="year_ix" UNIQUE="false" FIELDS="year" PREVIOUS="courseid_ix" NEXT="yearorgunitid_ix"/>
-        <INDEX NAME="yearorgunitid_ix" UNIQUE="false" FIELDS="year, orgunitid" PREVIOUS="year_ix"/>
+        <INDEX NAME="year_ix" UNIQUE="false" FIELDS="year(10)" PREVIOUS="courseid_ix" NEXT="yearorgunitid_ix"/>
+        <INDEX NAME="yearorgunitid_ix" UNIQUE="false" FIELDS="year(10), orgunitid" PREVIOUS="year_ix"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="block_feedbackmgr_category" COMMENT="Mapping(s) from Moodle category to Org.Unit/Site/Time" PREVIOUS="block_feedbackmgr_orgcourse" NEXT="block_feedbackmgr_orgassess">
@@ -71,7 +71,8 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="categoryid"/>
         <FIELD NAME="categoryid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Moodle category" PREVIOUS="id" NEXT="orgsiteid"/>
         <FIELD NAME="orgsiteid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Corresponding Org.Site (if applicable)" PREVIOUS="categoryid" NEXT="orgunitid"/>
-        <FIELD NAME="orgunitid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Corresponding Org.Unit (if applicable)" PREVIOUS="orgsiteid"/>
+        <FIELD NAME="orgunitid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Corresponding Org.Unit (if applicable)" PREVIOUS="orgsiteid" NEXT="orgtimeid"/>
+        <FIELD NAME="orgtimeid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Corresponding Org.Time (if applicable)" PREVIOUS="orgunitid"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

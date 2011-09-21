@@ -9,13 +9,19 @@ Copyright 2011, The University of Nottingham
 
 Status: work in progress.
 
-Known issues:
-	- not yet implemented :-)
-
 Plan:
 	- hopefully some basic funcionality to plan submission and feedback by
 	  2011-09-30
 	- if going ahead, more complete functionality to be developed Q4 2011
+
+Progress:
+    - supports initial import of organisation definitions of courses & assessments.
+
+Known issues:
+    - renamed to block 'feedbackmgr' - need to rename github repository
+	- can't view information
+	- can't link to categories or courses
+	- feedback not defined or supported 
 
 Note:
 	needs to be initialised with curriculum-related information; currently there is
