@@ -8,6 +8,8 @@ $string['errorprocessingjson'] = 'There was an error processing the supplied fil
 $string['errorunknownjson'] = 'The uploaded file does not appear to be in a supported format (no header or modules)';
 // This error string should also be in /lang/en/block_feedbackmgr.php! (apparently)
 $string['errorreplaceunit'] = 'The uploaded has different information for org.unit $sourcedid (enable replace to force change)';
+// for capability
+$string['feedbackmgr:manageorgdata'] = 'Manage organisation definitions';
 $string['import'] = 'Import data';
 $string['importorgdata'] = 'Import (upload) organisation definitions';
 $string['importfile'] = 'Curriculum data file to import';

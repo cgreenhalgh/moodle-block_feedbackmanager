@@ -19,7 +19,7 @@ Progress:
 
 Known issues:
     - renamed to block 'feedbackmgr' - need to rename github repository
-	- can't view information
+    - level not imported (could act as orgcoursegrp)
 	- can't link to categories or courses
 	- feedback not defined or supported 
 
