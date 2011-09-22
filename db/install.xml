@@ -24,7 +24,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="block_feedbackmgr_orgunit_code_ix" UNIQUE="true" FIELDS="code(20)"/>
+        <INDEX NAME="block_feedbackmgr_orgunit_code_ix" UNIQUE="true" FIELDS="code"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="block_feedbackmgr_orgtime" COMMENT="A definition of a time period in which teaching (or QA) may occur, e.g. a session, or a particular semester of a certain year/session" PREVIOUS="block_feedbackmgr_orgsite" NEXT="block_feedbackmgr_orgcourse">
@@ -62,8 +62,8 @@
         <INDEX NAME="orgunitid_ix" UNIQUE="false" FIELDS="orgunitid" NEXT="orgsiteid_ix"/>
         <INDEX NAME="orgsiteid_ix" UNIQUE="false" FIELDS="orgsiteid" PREVIOUS="orgunitid_ix" NEXT="courseid_ix"/>
         <INDEX NAME="courseid_ix" UNIQUE="false" FIELDS="courseid" PREVIOUS="orgsiteid_ix" NEXT="year_ix"/>
-        <INDEX NAME="year_ix" UNIQUE="false" FIELDS="year(10)" PREVIOUS="courseid_ix" NEXT="yearorgunitid_ix"/>
-        <INDEX NAME="yearorgunitid_ix" UNIQUE="false" FIELDS="year(10), orgunitid" PREVIOUS="year_ix"/>
+        <INDEX NAME="year_ix" UNIQUE="false" FIELDS="year" PREVIOUS="courseid_ix" NEXT="yearorgunitid_ix"/>
+        <INDEX NAME="yearorgunitid_ix" UNIQUE="false" FIELDS="year, orgunitid" PREVIOUS="year_ix"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="block_feedbackmgr_category" COMMENT="Mapping(s) from Moodle category to Org.Unit/Site/Time" PREVIOUS="block_feedbackmgr_orgcourse" NEXT="block_feedbackmgr_orgassess">
