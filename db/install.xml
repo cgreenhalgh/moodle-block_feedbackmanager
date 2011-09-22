@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/feedbackmgr/db" VERSION="20110921" COMMENT="XMLDB file for Moodle blocks/feedbackmgr"
+<XMLDB PATH="blocks/feedbackmgr/db" VERSION="20110922" COMMENT="XMLDB file for Moodle blocks/feedbackmgr"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -7,8 +7,8 @@
     <TABLE NAME="block_feedbackmgr_orgunit" COMMENT="Organisation Unit (e.g. School, department); populated from Curriculum/QA database" NEXT="block_feedbackmgr_orgsite">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="sourcedid"/>
-        <FIELD NAME="sourcedid" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="ID of orgunit in source (external) database" PREVIOUS="id" NEXT="title"/>
-        <FIELD NAME="title" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" COMMENT="Org.Unit title (name)" PREVIOUS="sourcedid"/>
+        <FIELD NAME="sourcedid" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="ID of orgunit in source (external) database" PREVIOUS="id" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Org.Unit title (name)" PREVIOUS="sourcedid"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -17,23 +17,23 @@
     <TABLE NAME="block_feedbackmgr_orgsite" COMMENT="Organisation site, from curriculum/QA import; assumed to deliver courses essentially independently (as in the UoN), but with mappings between QA structures. Note that one OrgUnit can span multiple sites (matrix-style)." PREVIOUS="block_feedbackmgr_orgunit" NEXT="block_feedbackmgr_orgtime">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="code"/>
-        <FIELD NAME="code" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" COMMENT="Code/ID of site." PREVIOUS="id" NEXT="title"/>
-        <FIELD NAME="title" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Title (name) or Org.Site" PREVIOUS="code"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Code/ID of site." PREVIOUS="id" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Title (name) or Org.Site" PREVIOUS="code"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="block_feedbackmgr_orgunit_code_ix" UNIQUE="true" FIELDS="code"/>
+        <INDEX NAME="code_ix" UNIQUE="true" FIELDS="code"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="block_feedbackmgr_orgtime" COMMENT="A definition of a time period in which teaching (or QA) may occur, e.g. a session, or a particular semester of a certain year/session" PREVIOUS="block_feedbackmgr_orgsite" NEXT="block_feedbackmgr_orgcourse">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="year"/>
-        <FIELD NAME="year" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" COMMENT="Year identifier - textual (e.g. 11/12)" PREVIOUS="id" NEXT="term"/>
-        <FIELD NAME="term" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Term (name) or other teaching block identifier (e.g. semester)" PREVIOUS="year" NEXT="orgsiteid"/>
+        <FIELD NAME="year" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Year identifier - textual (e.g. 11/12)" PREVIOUS="id" NEXT="term"/>
+        <FIELD NAME="term" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Term (name) or other teaching block identifier (e.g. semester)" PREVIOUS="year" NEXT="orgsiteid"/>
         <FIELD NAME="orgsiteid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Optional Org.Site to which this orgtime is specific." PREVIOUS="term" NEXT="sorttime"/>
-        <FIELD NAME="sorttime" TYPE="number" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" DECIMALS="3" COMMENT="Year (and fraction) of start of orgtime; used for sorting" PREVIOUS="orgsiteid"/>
+        <FIELD NAME="sorttime" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="unix time of start of orgtime; used for sorting" PREVIOUS="orgsiteid"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -42,18 +42,18 @@
     <TABLE NAME="block_feedbackmgr_orgcourse" COMMENT="A 'course' (e.g. a module), as specified by external curriculum/qa information. May (or may not) be supported by a moodle course." PREVIOUS="block_feedbackmgr_orgtime" NEXT="block_feedbackmgr_category">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="sourcedid"/>
-        <FIELD NAME="sourcedid" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="ID of course in external database" PREVIOUS="id" NEXT="orgunitid"/>
+        <FIELD NAME="sourcedid" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="ID of course in external database" PREVIOUS="id" NEXT="orgunitid"/>
         <FIELD NAME="orgunitid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Org.Unit responsible for this course" PREVIOUS="sourcedid" NEXT="orgsiteid"/>
         <FIELD NAME="orgsiteid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Org.Site at which this course is available" PREVIOUS="orgunitid" NEXT="title"/>
-        <FIELD NAME="title" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Course title" PREVIOUS="orgsiteid" NEXT="code"/>
-        <FIELD NAME="code" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Code/unique short name of course (unique within orgtime &amp;amp; orgsite, anyway)" PREVIOUS="title" NEXT="available"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Course title" PREVIOUS="orgsiteid" NEXT="code"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Code/unique short name of course (unique within orgtime &amp;amp; orgsite, anyway)" PREVIOUS="title" NEXT="available"/>
         <FIELD NAME="available" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" COMMENT="Is course available to students?" PREVIOUS="code" NEXT="status"/>
-        <FIELD NAME="status" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Status of course, e.g. Live, Suspended, Dormant" PREVIOUS="available" NEXT="timemodified"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Status of course, e.g. Live, Suspended, Dormant" PREVIOUS="available" NEXT="timemodified"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Time this row last modified" PREVIOUS="status" NEXT="sourcetime"/>
         <FIELD NAME="sourcetime" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Timestamp of information dump from source" PREVIOUS="timemodified" NEXT="courseid"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Local moodle course (if any)" PREVIOUS="sourcetime" NEXT="year"/>
-        <FIELD NAME="year" TYPE="text" LENGTH="small" NOTNULL="true" SEQUENCE="false" COMMENT="Year/session taught" PREVIOUS="courseid" NEXT="term"/>
-        <FIELD NAME="term" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Term/semester/etc taught" PREVIOUS="year"/>
+        <FIELD NAME="year" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Year/session taught" PREVIOUS="courseid" NEXT="term"/>
+        <FIELD NAME="term" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Term/semester/etc taught" PREVIOUS="year"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -62,8 +62,8 @@
         <INDEX NAME="orgunitid_ix" UNIQUE="false" FIELDS="orgunitid" NEXT="orgsiteid_ix"/>
         <INDEX NAME="orgsiteid_ix" UNIQUE="false" FIELDS="orgsiteid" PREVIOUS="orgunitid_ix" NEXT="courseid_ix"/>
         <INDEX NAME="courseid_ix" UNIQUE="false" FIELDS="courseid" PREVIOUS="orgsiteid_ix" NEXT="year_ix"/>
-        <INDEX NAME="year_ix" UNIQUE="false" FIELDS="year" PREVIOUS="courseid_ix" NEXT="yearorgunitid_ix"/>
-        <INDEX NAME="yearorgunitid_ix" UNIQUE="false" FIELDS="year, orgunitid" PREVIOUS="year_ix"/>
+        <INDEX NAME="year_ix" UNIQUE="false" FIELDS="year" PREVIOUS="courseid_ix" NEXT="yearorgunit_ix"/>
+        <INDEX NAME="yearorgunit_ix" UNIQUE="false" FIELDS="year, orgunitid" PREVIOUS="year_ix"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="block_feedbackmgr_category" COMMENT="Mapping(s) from Moodle category to Org.Unit/Site/Time" PREVIOUS="block_feedbackmgr_orgcourse" NEXT="block_feedbackmgr_orgassess">
@@ -78,12 +78,12 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="block_feedbackmgr_orgassess" COMMENT="Formal assessment element of a course, as specified by external curriculum/QA database." PREVIOUS="block_feedbackmgr_category">
+    <TABLE NAME="block_feedbackmgr_orgassess" COMMENT="Formal assessment element of a course, as specified by external curriculum/QA database." PREVIOUS="block_feedbackmgr_category" NEXT="block_feedbackmgr_acttype">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="orgcourseid"/>
         <FIELD NAME="orgcourseid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="Org.Course for which it is an assessment" PREVIOUS="id" NEXT="type"/>
-        <FIELD NAME="type" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Assessment type (name)" PREVIOUS="orgcourseid" NEXT="status"/>
-        <FIELD NAME="status" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Assessment status (e.g. Compulsory)" PREVIOUS="type" NEXT="weightpercent"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="Assessment type (name)" PREVIOUS="orgcourseid" NEXT="status"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="Assessment status (e.g. Compulsory)" PREVIOUS="type" NEXT="weightpercent"/>
         <FIELD NAME="weightpercent" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Percentage contribution to course (Null if not representable as percentage; 0 if not summative)" PREVIOUS="status" NEXT="requirements"/>
         <FIELD NAME="requirements" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Description of assessment requirements" PREVIOUS="weightpercent"/>
       </FIELDS>
@@ -92,6 +92,60 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="orgcourseid_ix" UNIQUE="false" FIELDS="orgcourseid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="block_feedbackmgr_acttype" COMMENT="Definitions of activity types, e.g. cw submission, moodle assignment, hardcopy submission, ..." PREVIOUS="block_feedbackmgr_orgassess" NEXT="block_feedbackmgr_fbmethod">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Name of activity type" PREVIOUS="id" NEXT="description"/>
+        <FIELD NAME="description" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" PREVIOUS="title" NEXT="scope"/>
+        <FIELD NAME="scope" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" COMMENT="undefined (0), individual, group, attendees, course, ... (enumeration)" PREVIOUS="description"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="title_ix" UNIQUE="true" FIELDS="title"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="block_feedbackmgr_fbmethod" COMMENT="Feedback method definition" PREVIOUS="block_feedbackmgr_acttype" NEXT="block_feedbackmgr_activity">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="description"/>
+        <FIELD NAME="description" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" PREVIOUS="title" NEXT="scope"/>
+        <FIELD NAME="scope" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="description"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="block_feedbackmgr_activity" COMMENT="Definition of an activity and its associated feedback" PREVIOUS="block_feedbackmgr_fbmethod">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="orgcourseid"/>
+        <FIELD NAME="orgcourseid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Org.Course with which activity is associated" PREVIOUS="id" NEXT="courseid"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="Local moodle course id (if any)" PREVIOUS="orgcourseid" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="courseid" NEXT="description"/>
+        <FIELD NAME="description" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Optional description of activity" PREVIOUS="title" NEXT="formative"/>
+        <FIELD NAME="formative" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" COMMENT="activity is formative?" PREVIOUS="description" NEXT="summative"/>
+        <FIELD NAME="summative" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" COMMENT="activity is summative?" PREVIOUS="formative" NEXT="orgassessid"/>
+        <FIELD NAME="orgassessid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="ID of associated org.assessment (if any)" PREVIOUS="summative" NEXT="weightpercent"/>
+        <FIELD NAME="weightpercent" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="for summative, of orgcourseid" PREVIOUS="orgassessid" NEXT="editstatus"/>
+        <FIELD NAME="editstatus" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" COMMENT="default; draft; confirmed; changed; deleted" PREVIOUS="weightpercent" NEXT="visible"/>
+        <FIELD NAME="visible" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="editstatus" NEXT="acttypeid"/>
+        <FIELD NAME="acttypeid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Activity Type id" PREVIOUS="visible" NEXT="activitymetadata"/>
+        <FIELD NAME="activitymetadata" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="JSON-encoded metadata, acttype-specific e.g. cw submission ID" PREVIOUS="acttypeid" NEXT="fbmethodid"/>
+        <FIELD NAME="fbmethodid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Feedback method id" PREVIOUS="activitymetadata" NEXT="feedbackmetadata"/>
+        <FIELD NAME="feedbackmetadata" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Feedback method-specific metadata, JSON-encoded" PREVIOUS="fbmethodid" NEXT="feedbackstatus"/>
+        <FIELD NAME="feedbackstatus" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" COMMENT="not started; in progress; complete" PREVIOUS="feedbackmetadata" NEXT="activitydeadline"/>
+        <FIELD NAME="activitydeadline" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="feedbackstatus" NEXT="feedbackdue"/>
+        <FIELD NAME="feedbackdue" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Unix time" PREVIOUS="activitydeadline"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="orgcourseid_ix" UNIQUE="false" FIELDS="orgcourseid" NEXT="orgassessid_ix"/>
+        <INDEX NAME="orgassessid_ix" UNIQUE="false" FIELDS="orgassessid" PREVIOUS="orgcourseid_ix"/>
       </INDEXES>
     </TABLE>
   </TABLES>

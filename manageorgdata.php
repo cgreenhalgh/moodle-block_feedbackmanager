@@ -73,7 +73,7 @@ if ($yearid) {
 	$orgyears = $DB->get_records_select('block_feedbackmgr_orgtime','term IS NULL',null,'year ASC');
 	foreach ($orgyears as $orgyear) {
 		// nice to scope by site/unit if specified...
-		$ncourses = $DB->count_records_select('block_feedbackmgr_orgcourse',$DB->sql_compare_text('year').' = ?', array($orgyear->year));
+		$ncourses = $DB->count_records('block_feedbackmgr_orgcourse',array('year'=>$orgyear->year));
 		$urlparams2 = $urlparams; // clone
 		$urlparams2['year'] = $orgyear->id;
 		$url = new moodle_url('/blocks/feedbackmgr/manageorgdata.php', $urlparams2);		
@@ -136,9 +136,9 @@ if ($orgyear && $orgunit) {
 	echo '<table>';
 	echo '<tr><th>Course Code</th><th>Course Title</th><th>Taught</th><th>Assessment</th></tr>';
 	if ($orgsite)
-		$orgcourses = $DB->get_records_select('block_feedbackmgr_orgcourse','available=1 AND '.$DB->sql_compare_text('year').'=? AND orgunitid=? AND orgsiteid=?', array($orgyear->year,$orgunit->id,$orgsite->id),'term ASC, code ASC');
+		$orgcourses = $DB->get_records('block_feedbackmgr_orgcourse',array('available'=>1,'year'=>$orgyear->year,'orgunitid'=>$orgunit->id,'orgsiteid'=>$orgsite->id),'term ASC, code ASC');
 	else
-		$orgcourses = $DB->get_records_select('block_feedbackmgr_orgcourse','available=1 AND '.$DB->sql_compare_text('year').'=? AND orgunitid=?', array($orgyear->year,$orgunit->id),'term ASC, code ASC');
+		$orgcourses = $DB->get_records('block_feedbackmgr_orgcourse',array('available'=>1,'year'=>$orgyear->year,'orgunitid'=>$orgunit->id),'term ASC, code ASC');
 	//$term = null;
 	foreach ($orgcourses as $orgcourse) {
 		//if ($orgcourse->term != $term) {

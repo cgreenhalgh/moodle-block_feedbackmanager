@@ -117,8 +117,7 @@ if ($mform->is_cancelled()) {
 				// ensure that we have the specified Organisational Unit
 				$orgunitsourcedid = $module->org->code;
 
-				// match on string...
-				$orgunit = $DB->get_record_select('block_feedbackmgr_orgunit', $DB->sql_compare_text('sourcedid')." = ?", array($orgunitsourcedid));
+				$orgunit = $DB->get_record('block_feedbackmgr_orgunit', array('sourcedid'=>$orgunitsourcedid));
 				if ($orgunit) {
 					if ($orgunit->title!=$module->org->descr)
 						if ($replace) {
@@ -147,8 +146,7 @@ if ($mform->is_cancelled()) {
 						echo '<p>Skip module '.$module->code.' at site '.$site_code.' (only considering '.$limitsite.')';
 						continue;
 					}
-					// match on string...
-					$orgsite = $DB->get_record_select('block_feedbackmgr_orgsite',  $DB->sql_compare_text('code')." = ?", array($site_code));
+					$orgsite = $DB->get_record('block_feedbackmgr_orgsite',  array('code'=>$site_code));
 					if (!$orgsite) {
 						$orgsite = new stdClass();
 						$orgsite->code = $site_code;
@@ -166,7 +164,7 @@ if ($mform->is_cancelled()) {
 					continue;						
 				}
 				$term = $module->taught->semester;
-				$orgyear = $DB->get_record_select('block_feedbackmgr_orgtime',  $DB->sql_compare_text('year').' = ? AND term IS NULL', array($year));
+				$orgyear = $DB->get_record_select('block_feedbackmgr_orgtime',  'year = ? AND term IS NULL', array($year));
 				if (!$orgyear) {
 					$orgyear = new stdClass();
 					$orgyear->year= $year;
@@ -174,7 +172,7 @@ if ($mform->is_cancelled()) {
 					echo '<p>Added year/session '.$orgyear->year.'</p>';			
 				}
 				if (!empty($term)) {
-					$orgterm = $DB->get_record_select('block_feedbackmgr_orgtime',  $DB->sql_compare_text('year').' = ? AND '.$DB->sql_compare_text('term').' = ?', array($year,$term));
+					$orgterm = $DB->get_record('block_feedbackmgr_orgtime',  array('year'=>$year,'term'=>$term));
 					if (!$orgterm) {
 						$orgterm = new stdClass();
 						$orgterm->year= $year;
@@ -201,13 +199,13 @@ if ($mform->is_cancelled()) {
 				$neworgcourse->year = $year;
 				$neworgcourse->term = $term;
 				
-				$orgcourse = $DB->get_record_select('block_feedbackmgr_orgcourse',  $DB->sql_compare_text('sourcedid').' = ?', array($sourcedid));
+				$orgcourse = $DB->get_record('block_feedbackmgr_orgcourse',  array('sourcedid'=>$sourcedid));
 				if ($orgcourse) {
 					if ($replace) {
 						$neworgcourse->id = $orgcourse->id;
 						$neworgcourse->timemodified = time();
 						$DB->update_record('block_feedbackmgr_orgcourse', $neworgcourse);
-						$orgcourse = $DB->get_record_select('block_feedbackmgr_orgcourse',  $DB->sql_compare_text('sourcedid').' = ?', array($sourcedid));
+						$orgcourse = $DB->get_record('block_feedbackmgr_orgcourse', array('sourcedid'=>$sourcedid));
 						echo '<p>Updated course '.$orgcourse->sourcedid.' ('.$orgcourse->code.' at '.$site_code.', '.$term.' '.$year.')</p>';
 					}
 					else {
@@ -237,7 +235,7 @@ if ($mform->is_cancelled()) {
 					$newassess->status = $assess->status;
 					$newassess->weightpercent = $assess->percent;
 					
-					$assess = $DB->get_record_select('block_feedbackmgr_orgassess', 'orgcourseid = ? AND '.$DB->sql_compare_text('type').' = ?', array($orgcourse->id, $assess->type));
+					$assess = $DB->get_record('block_feedbackmgr_orgassess', array('orgcourseid'=>$orgcourse->id, 'type'=>$assess->type));
 					if ($assess) {
 						unset($oldassesses[$assess->id]);
 						$newassess->id = $assess->id;
