@@ -1,5 +1,6 @@
 <?php
 
+$string['createactivities'] = 'Create missing activities for defined assessments';
 // This error string should also be in /lang/en/block_feedbackmgr.php! (apparently)
 $string['errorinvalidjson'] = 'The uploaded file appears not be corrupted or not in JSON format';
 // This error string should also be in /lang/en/block_feedbackmgr.php!
@@ -16,6 +17,7 @@ $string['importfile'] = 'Curriculum data file to import';
 $string['limitsitecode'] = 'Limit import to specified site code (optional)';
 $string['limityear'] = 'Limit import to specified year (optional)';
 $string['manageorgdata'] = 'Manage organisation definitions (curriculum/assessments)';
+$string['orgindex'] = 'Overview of organisation definitions (curriculum/assessments)';
 $string['pluginname'] = 'Feedback manager';
 //$string['settings'] = 'Feedback manager settings';
 $string['replaceexisting'] = 'Replace existing definitions';
