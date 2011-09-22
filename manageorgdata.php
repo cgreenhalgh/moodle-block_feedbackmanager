@@ -66,7 +66,7 @@ if ($yearid) {
 	$urlparams2 = $urlparams; // clone
 	unset($urlparams2['year']);
 	$url = new moodle_url('/blocks/feedbackmgr/manageorgdata.php', $urlparams2);		
-	echo '<p>Year: '.$year->year.' (<a href="'.$url.'">any year</a>)</p>';
+	echo '<p>Year: '.$orgyear->year.' (<a href="'.$url.'">any year</a>)</p>';
 } else {
 	echo '<p>Years/sessions:</p>';
 	echo '<ul>';

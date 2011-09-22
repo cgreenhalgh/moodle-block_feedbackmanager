@@ -215,7 +215,7 @@ if ($mform->is_cancelled()) {
 				}				
 				else {
 					// add
-					debugging('add orgcourse '.var_export($neworgcourse, true));
+					//debugging('add orgcourse '.var_export($neworgcourse, true));
 					$orgcourse = $neworgcourse;
 					$orgcourse->timemodified = time();
 					$orgcourse->id = $DB->insert_record('block_feedbackmgr_orgcourse', $orgcourse);
